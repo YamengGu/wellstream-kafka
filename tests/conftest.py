@@ -34,3 +34,16 @@ def reading(ts_s: float, exact: tuple = (), **kw) -> dict:
         if ch not in exact and base[ch] is not None:
             base[ch] += k * 0.01
     return base
+
+
+def reset_warehouse(conn) -> None:
+    """Drop WellStream objects (not the whole schema: that would drop the TimescaleDB extension,
+    which cannot be re-created in the same session)."""
+    with conn, conn.cursor() as cur:
+        cur.execute("""
+            DROP MATERIALIZED VIEW IF EXISTS ml_features_1min;
+            DROP VIEW IF EXISTS mart_daily_drilling, v_reading_section;
+            DROP TABLE IF EXISTS fact_drilling_reading, fact_drilling_event, dim_hole_section,
+                                 dim_wellbore, dim_rig_state, dim_date CASCADE;
+            DROP FUNCTION IF EXISTS upsert_wellbore(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TIMESTAMPTZ);
+        """)

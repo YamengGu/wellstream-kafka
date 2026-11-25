@@ -22,8 +22,8 @@ jobs:
     env:
       WELLSTREAM_TEST_PG_DSN: postgresql://wellstream:wellstream@localhost:5432/wellstream_test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -66,8 +66,8 @@ jobs:
       WELLSTREAM_TEST_KAFKA: localhost:9092
       WELLSTREAM_TEST_PG_DSN: postgresql://wellstream:wellstream@localhost:5432/wellstream_test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -78,7 +78,7 @@ jobs:
     name: Compose file and image build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: docker compose config --quiet
       - run: docker build -t wellstream:ci .
       - run: docker run --rm wellstream:ci --help

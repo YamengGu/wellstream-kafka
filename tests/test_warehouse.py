@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 import pytest
+from conftest import reset_warehouse
 
 from wellstream.detector import Detector
 from wellstream.validator import Validator
@@ -16,8 +17,7 @@ REF = Path(__file__).parents[1] / "reference"
 def conn():
     from wellstream.warehouse import connect, init_db
     c = connect(DSN)
-    with c, c.cursor() as cur:
-        cur.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
+    reset_warehouse(c)
     init_db(c, REF)
     yield c
     c.close()

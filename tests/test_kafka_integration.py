@@ -7,6 +7,7 @@ import uuid
 
 import pytest
 from confluent_kafka import Consumer, TopicPartition
+from conftest import reset_warehouse
 
 from wellstream import topics
 
@@ -48,8 +49,7 @@ def test_end_to_end(raw_excerpt):
     if DSN:
         from wellstream.warehouse import Loader, connect, init_db
         conn = connect(DSN)
-        with conn, conn.cursor() as cur:
-            cur.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
+        reset_warehouse(conn)
         init_db(conn, os.path.join(os.path.dirname(__file__), "..", "reference"))
         run_sink(BOOTSTRAP, REGISTRY, Loader(conn), group_id=f"it-sink-{run}", max_idle_s=15)
         with conn.cursor() as cur:
