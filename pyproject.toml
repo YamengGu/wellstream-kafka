@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wellstream"
+version = "0.1.0"
+description = "Real-time drilling data pipeline on Apache Kafka with a formal warehouse data model (Equinor Volve data)"
+readme = "README.md"
+authors = [{ name = "Yameng Gu" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "confluent-kafka[avro,schemaregistry]>=2.6",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "pyarrow>=14",
+    "psycopg2-binary>=2.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+wellstream = "wellstream.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+wellstream = ["schemas/*.avsc", "sql/*.sql"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "postgres: needs a PostgreSQL database (WELLSTREAM_TEST_PG_DSN)",
+    "kafka: needs a running Kafka broker (WELLSTREAM_TEST_KAFKA)",
+]

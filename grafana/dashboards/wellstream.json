@@ -1,0 +1,175 @@
+{
+  "uid": "wellstream",
+  "title": "WellStream: drilling monitor",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "time": {
+    "from": "2013-08-22T00:00:00Z",
+    "to": "2013-08-29T00:00:00Z"
+  },
+  "timezone": "utc",
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "wellbore",
+        "label": "Wellbore",
+        "type": "query",
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "warehouse"
+        },
+        "query": "SELECT wellbore_id FROM dim_wellbore WHERE is_current ORDER BY 1",
+        "definition": "SELECT wellbore_id FROM dim_wellbore WHERE is_current ORDER BY 1",
+        "refresh": 1,
+        "current": {
+          "text": "NO 15/9-F-1 C",
+          "value": "NO 15/9-F-1 C"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Standpipe pressure (bar) and flow (L/min ÷ 10)",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "warehouse"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "warehouse"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "editorMode": "code",
+          "rawSql": "SELECT $__timeGroupAlias(ts, $__interval), avg(spp_bar) AS spp_bar, avg(flow_lpm)/10 AS flow_lpm_div10\nFROM fact_drilling_reading JOIN dim_wellbore w USING (wellbore_sk) WHERE w.wellbore_id = '$wellbore' AND $__timeFilter(ts)\nGROUP BY 1 ORDER BY 1"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Torque (kN·m), RPM ÷ 10, WOB (t)",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "warehouse"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "warehouse"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "editorMode": "code",
+          "rawSql": "SELECT $__timeGroupAlias(ts, $__interval), avg(torque_knm) AS torque_knm, avg(rpm)/10 AS rpm_div10, avg(wob_t) AS wob_t\nFROM fact_drilling_reading JOIN dim_wellbore w USING (wellbore_sk) WHERE w.wellbore_id = '$wellbore' AND $__timeFilter(ts)\nGROUP BY 1 ORDER BY 1"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Depth (m)",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "warehouse"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "warehouse"
+          },
+          "format": "time_series",
+          "rawQuery": true,
+          "editorMode": "code",
+          "rawSql": "SELECT $__timeGroupAlias(ts, $__interval), max(hole_depth_m) AS hole_depth_m, avg(bit_depth_m) AS bit_depth_m\nFROM fact_drilling_reading JOIN dim_wellbore w USING (wellbore_sk) WHERE w.wellbore_id = '$wellbore' AND $__timeFilter(ts)\nGROUP BY 1 ORDER BY 1"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "Drilling events",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "warehouse"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "warehouse"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code",
+          "rawSql": "SELECT e.start_ts, e.end_ts, e.event_type, e.severity, e.status, round(e.duration_s::numeric/60, 1) AS minutes,\n       e.depth_m, e.detail::text AS detail\nFROM fact_drilling_event e JOIN dim_wellbore w USING (wellbore_sk)\nWHERE w.wellbore_id = '$wellbore' AND $__timeFilter(e.start_ts)\nORDER BY e.severity DESC, e.start_ts"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "table",
+      "title": "Daily drilling KPIs",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "warehouse"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 33,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "warehouse"
+          },
+          "format": "table",
+          "rawQuery": true,
+          "editorMode": "code",
+          "rawSql": "SELECT calendar_date, hours_logged, drilling_hours, meters_drilled, avg_rop_mh, alerts\nFROM mart_daily_drilling WHERE wellbore_id = '$wellbore' ORDER BY calendar_date"
+        }
+      ]
+    }
+  ]
+}

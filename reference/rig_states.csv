@@ -1,0 +1,10 @@
+rig_state_code,rig_state_name,is_drilling,is_productive
+0,No data,false,false
+1,Rotary drilling,true,true
+2,Slide drilling,true,true
+3,In slips,false,true
+4,Run in hole,false,true
+5,Pull out of hole,false,true
+6,Reaming,false,true
+7,Circulating,false,true
+8,Static,false,true

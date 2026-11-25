@@ -1,0 +1,39 @@
+{
+  "well": "F-1C",
+  "wellbore_id": "NO 15/9-F-1 C",
+  "readings": 190995,
+  "routes": {
+    "clean": 190995
+  },
+  "quality_flags": {
+    "mud_weight_not_reported": 29192,
+    "wob_t_out_of_range": 2359,
+    "hole_depth_not_reported": 958,
+    "rpm_out_of_range": 1
+  },
+  "dlq_reasons": {},
+  "events_by_type": {
+    "DOWNLINK": 48,
+    "FROZEN_SENSOR": 1
+  },
+  "non_downlink_events": [
+    {
+      "event_type": "FROZEN_SENSOR",
+      "severity": 2,
+      "start_utc": "2013-08-25T05:41:47+00:00",
+      "end_utc": "2013-08-25T06:19:04+00:00",
+      "depth_m": 3591.2,
+      "detail": {
+        "channel": "spp_bar",
+        "value": 198.5583
+      }
+    }
+  ],
+  "downlinks_vs_driller_log": {
+    "detected": 48,
+    "confirmed_by_log": 44,
+    "log_entries": 56,
+    "log_entries_found": 46,
+    "tolerance": "15min"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "DrillingEvent",
+  "namespace": "com.wellstream.drilling",
+  "doc": "A detected drilling event. The same event_id is sent when it opens and again when it closes. Topic drilling.event.v1.",
+  "fields": [
+    {"name": "event_id", "type": "string", "doc": "Deterministic UUIDv5, so replays upsert instead of duplicating"},
+    {"name": "wellbore_id", "type": "string"},
+    {"name": "event_type", "type": "string", "doc": "DOWNLINK, PRESSURE_LOSS, FROZEN_SENSOR or TORQUE_SPIKE"},
+    {"name": "status", "type": "string", "doc": "OPEN or CLOSED"},
+    {"name": "severity", "type": "int", "doc": "1 info, 2 warning, 3 critical"},
+    {"name": "start_ts", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {"name": "end_ts", "type": ["null", {"type": "long", "logicalType": "timestamp-millis"}], "default": null},
+    {"name": "depth_m", "type": ["null", "double"], "default": null},
+    {"name": "detail", "type": "string", "default": "{}", "doc": "JSON with event-specific values"},
+    {"name": "detector_version", "type": "string"}
+  ]
+}

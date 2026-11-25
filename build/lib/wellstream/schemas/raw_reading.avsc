@@ -1,0 +1,22 @@
+{
+  "type": "record",
+  "name": "RawDrillingReading",
+  "namespace": "com.wellstream.drilling",
+  "doc": "One surface-logger sample as the rig sends it (WITSML channels, SI units). Topic drilling.sensor.raw.v1.",
+  "fields": [
+    {"name": "wellbore_id", "type": "string", "doc": "Wellbore name, e.g. 'NO 15/9-F-1 C'. Message key."},
+    {"name": "ts", "type": {"type": "long", "logicalType": "timestamp-millis"}, "doc": "Sample time, UTC"},
+    {"name": "rig_state_code", "type": ["null", "int"], "default": null, "doc": "Rig activity code 0-8"},
+    {"name": "hole_depth_m", "type": ["null", "double"], "default": null},
+    {"name": "bit_depth_m", "type": ["null", "double"], "default": null},
+    {"name": "hookload_n", "type": ["null", "double"], "default": null},
+    {"name": "wob_n", "type": ["null", "double"], "default": null},
+    {"name": "rpm_rps", "type": ["null", "double"], "default": null, "doc": "Surface rotation, rev/s"},
+    {"name": "torque_nm", "type": ["null", "double"], "default": null},
+    {"name": "spp_pa", "type": ["null", "double"], "default": null, "doc": "Standpipe pressure"},
+    {"name": "flow_in_m3s", "type": ["null", "double"], "default": null},
+    {"name": "rop_ms", "type": ["null", "double"], "default": null},
+    {"name": "mud_weight_kgm3", "type": ["null", "double"], "default": null},
+    {"name": "source", "type": "string", "default": "REPLAY", "doc": "REPLAY, WITSML or EDGE"}
+  ]
+}

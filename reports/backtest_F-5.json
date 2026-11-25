@@ -1,0 +1,51 @@
+{
+  "well": "F-5",
+  "wellbore_id": "NO 15/9-F-5",
+  "readings": 59487,
+  "routes": {
+    "clean": 59487
+  },
+  "quality_flags": {
+    "hookload_t_out_of_range": 3456,
+    "torque_knm_out_of_range": 443
+  },
+  "dlq_reasons": {},
+  "events_by_type": {
+    "TORQUE_SPIKE": 3
+  },
+  "non_downlink_events": [
+    {
+      "event_type": "TORQUE_SPIKE",
+      "severity": 2,
+      "start_utc": "2007-12-19T18:32:42+00:00",
+      "end_utc": "2007-12-19T18:33:41.011000+00:00",
+      "depth_m": 763.8,
+      "detail": {
+        "robust_z": 8.5,
+        "torque_knm": 2.51
+      }
+    },
+    {
+      "event_type": "TORQUE_SPIKE",
+      "severity": 2,
+      "start_utc": "2007-12-19T18:33:58.982000+00:00",
+      "end_utc": "2007-12-19T18:35:20.026000+00:00",
+      "depth_m": 764.6,
+      "detail": {
+        "robust_z": 8.4,
+        "torque_knm": 2.49
+      }
+    },
+    {
+      "event_type": "TORQUE_SPIKE",
+      "severity": 2,
+      "start_utc": "2007-12-20T04:42:59.011000+00:00",
+      "end_utc": "2007-12-20T04:43:44.026000+00:00",
+      "depth_m": 1097.0,
+      "detail": {
+        "robust_z": 8.2,
+        "torque_knm": 3.08
+      }
+    }
+  ]
+}

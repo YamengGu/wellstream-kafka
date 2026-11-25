@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "CleanDrillingReading",
+  "namespace": "com.wellstream.drilling",
+  "doc": "Validated reading in rig-floor (field) units. Topic drilling.sensor.clean.v1.",
+  "fields": [
+    {"name": "wellbore_id", "type": "string"},
+    {"name": "ts", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {"name": "rig_state_code", "type": ["null", "int"], "default": null},
+    {"name": "hole_depth_m", "type": ["null", "double"], "default": null},
+    {"name": "bit_depth_m", "type": ["null", "double"], "default": null},
+    {"name": "hookload_t", "type": ["null", "double"], "default": null, "doc": "tonnes-force"},
+    {"name": "wob_t", "type": ["null", "double"], "default": null, "doc": "tonnes-force"},
+    {"name": "rpm", "type": ["null", "double"], "default": null, "doc": "rev/min"},
+    {"name": "torque_knm", "type": ["null", "double"], "default": null},
+    {"name": "spp_bar", "type": ["null", "double"], "default": null},
+    {"name": "flow_lpm", "type": ["null", "double"], "default": null, "doc": "L/min"},
+    {"name": "rop_mh", "type": ["null", "double"], "default": null, "doc": "m/h"},
+    {"name": "mud_weight_kgm3", "type": ["null", "double"], "default": null},
+    {"name": "quality_flags", "type": {"type": "array", "items": "string"}, "default": []},
+    {"name": "validator_version", "type": "string"}
+  ]
+}

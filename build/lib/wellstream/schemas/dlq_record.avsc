@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "RejectedReading",
+  "namespace": "com.wellstream.drilling",
+  "doc": "A raw reading the validator could not accept. Topic drilling.sensor.dlq.v1.",
+  "fields": [
+    {"name": "wellbore_id", "type": "string"},
+    {"name": "ts", "type": ["null", "long"], "default": null},
+    {"name": "reason", "type": "string"},
+    {"name": "payload_json", "type": "string", "doc": "The original record, for manual review or replay"},
+    {"name": "validator_version", "type": "string"}
+  ]
+}

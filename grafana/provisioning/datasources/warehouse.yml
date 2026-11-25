@@ -1,0 +1,15 @@
+apiVersion: 1
+datasources:
+  - name: Warehouse
+    uid: warehouse
+    type: grafana-postgresql-datasource
+    url: warehouse:5432
+    user: wellstream
+    isDefault: true
+    secureJsonData:
+      password: wellstream
+    jsonData:
+      database: wellstream
+      sslmode: disable
+      postgresVersion: 1600
+      timescaledb: true
