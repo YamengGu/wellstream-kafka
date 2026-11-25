@@ -1,6 +1,7 @@
 """Kafka topic catalogue: one place that defines names, partitioning and retention."""
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 
 DAY_MS = 24 * 3600 * 1000
@@ -36,8 +37,11 @@ TOPICS = [
 ]
 
 
-def create_topics(bootstrap: str, replication_factor: int = 1) -> list[str]:
-    """Create any missing topics. Returns the names that were created."""
+def create_topics(bootstrap: str, replication_factor: int = 1, timeout_s: float = 30.0) -> list[str]:
+    """Create any missing topics and wait until every partition has a leader.
+
+    Returns the names that were created.
+    """
     from confluent_kafka.admin import AdminClient, NewTopic
 
     admin = AdminClient({"bootstrap.servers": bootstrap})
@@ -46,8 +50,25 @@ def create_topics(bootstrap: str, replication_factor: int = 1) -> list[str]:
         NewTopic(t.name, num_partitions=t.partitions, replication_factor=replication_factor, config=t.config())
         for t in TOPICS if t.name not in existing
     ]
-    if not todo:
-        return []
-    for fut in admin.create_topics(todo).values():
-        fut.result()  # raises if creation failed
+    if todo:
+        for fut in admin.create_topics(todo).values():
+            fut.result()  # raises if creation failed
+    _wait_for_leaders(admin, [t.name for t in TOPICS], timeout_s)
     return [t.topic for t in todo]
+
+
+def _wait_for_leaders(admin, names: list[str], timeout_s: float) -> None:
+    """A new topic is usable only once each partition has an elected leader."""
+    deadline = time.monotonic() + timeout_s
+    while True:
+        md = admin.list_topics(timeout=10).topics
+        ready = all(
+            n in md and md[n].error is None and md[n].partitions
+            and all(p.leader >= 0 and p.error is None for p in md[n].partitions.values())
+            for n in names
+        )
+        if ready:
+            return
+        if time.monotonic() > deadline:
+            raise TimeoutError(f"topic partitions have no leader after {timeout_s}s: {names}")
+        time.sleep(0.5)

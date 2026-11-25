@@ -43,7 +43,8 @@ def reset_warehouse(conn) -> None:
         cur.execute("""
             DROP MATERIALIZED VIEW IF EXISTS ml_features_1min;
             DROP VIEW IF EXISTS mart_daily_drilling, v_reading_section;
-            DROP TABLE IF EXISTS fact_drilling_reading, fact_drilling_event, dim_hole_section,
-                                 dim_wellbore, dim_rig_state, dim_date CASCADE;
+            DROP TABLE IF EXISTS fact_drilling_reading;  -- a hypertable must be dropped on its own
+            DROP TABLE IF EXISTS fact_drilling_event, dim_hole_section, dim_wellbore, dim_rig_state,
+                                 dim_date CASCADE;
             DROP FUNCTION IF EXISTS upsert_wellbore(TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TIMESTAMPTZ);
         """)
